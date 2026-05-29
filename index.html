@@ -1,0 +1,1331 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>يُسر | لوحة تحكم حياتك المتكاملة</title>
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="تطبيق يُسر هو لوحة تحكم شخصية متكاملة لإدارة حياتك المالية والعملية والمهنية والصحية في مكان واحد بأمان وسهولة تامة.">
+    <!-- Fonts & Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Readex+Pro:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#2563eb">
+    <link rel="apple-touch-icon" href="icons/icon-192.png">
+    <!-- Custom Style -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="dark-theme">
+    <!-- Notification Toast Container -->
+    <div id="toast-container" class="toast-container"></div>
+
+    <!-- Main Layout Grid -->
+    <div class="app-container">
+        
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="sidebar-brand">
+                <div class="logo-icon">
+                    <i class="fa-solid fa-leaf"></i>
+                </div>
+                <h2>يُسر</h2>
+            </div>
+            <nav class="sidebar-menu">
+                <button class="nav-btn active" data-tab="dashboard">
+                    <i class="fa-solid fa-chart-line"></i>
+                    <span>الرئيسية</span>
+                </button>
+                <button class="nav-btn" data-tab="tasks">
+                    <i class="fa-solid fa-list-check"></i>
+                    <span>المهام والأهداف</span>
+                </button>
+                <button class="nav-btn" data-tab="finance">
+                    <i class="fa-solid fa-wallet"></i>
+                    <span>المال والاشتراكات</span>
+                </button>
+                <button class="nav-btn" data-tab="health">
+                    <i class="fa-solid fa-heart-pulse"></i>
+                    <span>الصحة والعافية</span>
+                </button>
+                <button class="nav-btn" data-tab="calendar">
+                    <i class="fa-solid fa-calendar-check"></i>
+                    <span>التقويم واليوميات</span>
+                </button>
+                <button class="nav-btn" data-tab="stats">
+                    <i class="fa-solid fa-chart-pie"></i>
+                    <span>التقارير والإحصائيات</span>
+                </button>
+                <button class="nav-btn" data-tab="ai-assistant">
+                    <i class="fa-solid fa-robot"></i>
+                    <span>المساعد الذكي</span>
+                    <span class="ai-badge">AI</span>
+                </button>
+                <button class="nav-btn" data-tab="settings">
+                    <i class="fa-solid fa-gear"></i>
+                    <span>الإعدادات</span>
+                </button>
+            </nav>
+            <div class="sidebar-footer">
+                <p>تطبيق يُسر v1.0</p>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            
+            <!-- Topbar Header -->
+            <header class="topbar">
+                <div class="topbar-left">
+                    <div class="welcome-text">
+                        <h1 id="greeting-title">مرحباً بك</h1>
+                        <p id="topbar-date">الجمعة، 29 مايو 2026</p>
+                    </div>
+                </div>
+                <div class="topbar-right">
+                    <!-- Quick Search / Input Command Bar -->
+                    <div class="quick-input-bar">
+                        <i class="fa-solid fa-bolt quick-icon"></i>
+                        <input type="text" id="quick-command-input" placeholder="إدخال سريع (مثال: أكل 20، نوم 8، مهمة قراءة)...">
+                        <button id="voice-input-btn" title="تفعيل إدخال الصوت" class="voice-btn">
+                            <i class="fa-solid fa-microphone"></i>
+                        </button>
+                    </div>
+                    
+                    <!-- Notification Bell -->
+                    <div class="notification-bell-container">
+                        <button id="bell-btn" class="bell-btn">
+                            <i class="fa-solid fa-bell"></i>
+                            <span id="bell-badge" class="bell-badge hidden">0</span>
+                        </button>
+                        <div id="notifications-dropdown" class="notifications-dropdown hidden">
+                            <div class="dropdown-header">
+                                <h3>التنبيهات</h3>
+                                <button id="clear-notifications-btn">مسح الكل</button>
+                            </div>
+                            <div id="notifications-list" class="notifications-list">
+                                <p class="empty-notifications">لا توجد إشعارات جديدة</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Theme Toggle -->
+                    <button id="theme-toggle-btn" class="theme-toggle-btn" title="تبديل المظهر">
+                        <i class="fa-solid fa-sun"></i>
+                    </button>
+                </div>
+            </header>
+
+            <!-- Active Tab Sections -->
+            <div class="content-body">
+                
+                <!-- 1. DASHBOARD SECTION -->
+                <section id="tab-dashboard" class="tab-section active">
+                    <!-- Energy & Mood Greeting Banner -->
+                    <div class="dashboard-banner">
+                        <div class="banner-info">
+                            <h2>كيف هي طاقتك ومزاجك اليوم؟</h2>
+                            <p>سجّل حالتك الآن ليقوم المساعد الذكي بتحليل إنتاجيتك وقراراتك المالية لاحقاً.</p>
+                            <div class="mood-energy-selector">
+                                <div class="selector-group">
+                                    <label>المزاج:</label>
+                                    <div class="mood-buttons">
+                                        <button class="mood-btn" data-mood="happy" title="سعيد">😊</button>
+                                        <button class="mood-btn" data-mood="calm" title="هادئ">😌</button>
+                                        <button class="mood-btn" data-mood="tired" title="متعب">😴</button>
+                                        <button class="mood-btn" data-mood="stressed" title="متوتر">😰</button>
+                                        <button class="mood-btn" data-mood="sad" title="حزين">😢</button>
+                                    </div>
+                                </div>
+                                <div class="selector-group">
+                                    <label>مستوى الطاقة الصباحي: <span id="energy-val-label">5</span>/10</label>
+                                    <input type="range" id="energy-range-input" min="1" max="10" value="5">
+                                </div>
+                                <button id="save-status-btn" class="btn-primary">حفظ الحالة</button>
+                            </div>
+                        </div>
+                        <div class="banner-stats">
+                            <div class="banner-stat-card">
+                                <span class="stat-title">مصاريف الشهر</span>
+                                <span class="stat-value" id="dash-month-expense">0 د.ع</span>
+                            </div>
+                            <div class="banner-stat-card">
+                                <span class="stat-title">إنجاز المهام</span>
+                                <span class="stat-value" id="dash-task-percentage">0%</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Dashboard Grid Grid -->
+                    <div class="dashboard-grid">
+                        <!-- Column 1: Focus & Top Goals -->
+                        <div class="dash-col">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h3><i class="fa-solid fa-bullseye text-primary"></i> أهم 3 أهداف لحياتك</h3>
+                                    <button class="btn-text" onclick="app.switchTab('tasks')">إدارة</button>
+                                </div>
+                                <div id="dash-goals-list" class="goals-mini-list">
+                                    <!-- Dynamic -->
+                                    <p class="empty-text">لم تقم بإضافة أهداف كبرى بعد.</p>
+                                </div>
+                            </div>
+
+                            <!-- Quick Expense Card -->
+                            <div class="card quick-expense-card">
+                                <div class="card-header">
+                                    <h3><i class="fa-solid fa-wallet text-danger"></i> تسجيل مصروف سريع</h3>
+                                </div>
+                                <div class="card-body" style="padding-top: 10px;">
+                                    <div class="form-group" style="margin-bottom: 12px;">
+                                        <label style="font-size: 0.85rem; margin-bottom: 6px; display: block; color: var(--text-secondary);">المبلغ (<span class="currency-label">د.ع</span>):</label>
+                                        <input type="number" id="dash-quick-amount-input" class="form-control" placeholder="مثال: 5000" style="padding: 8px 12px; font-size: 0.95rem;">
+                                    </div>
+                                    <div class="form-group" style="margin-bottom: 12px;">
+                                        <label style="font-size: 0.85rem; margin-bottom: 6px; display: block; color: var(--text-secondary);">التصنيف:</label>
+                                        <select id="dash-quick-category-select" class="form-control" style="padding: 8px 12px; font-size: 0.95rem;">
+                                            <option value="أكل">أكل</option>
+                                            <option value="مواصلات">مواصلات</option>
+                                            <option value="اشتراكات">اشتراكات</option>
+                                            <option value="تسوق">تسوق</option>
+                                            <option value="فواتير">فواتير</option>
+                                            <option value="قهوة">قهوة</option>
+                                            <option value="ترفيه">ترفيه</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group" style="margin-bottom: 15px;">
+                                        <label style="font-size: 0.85rem; margin-bottom: 6px; display: block; color: var(--text-secondary);">البيان:</label>
+                                        <input type="text" id="dash-quick-desc-input" class="form-control" placeholder="مثال: غداء عمل، قهوة..." style="padding: 8px 12px; font-size: 0.95rem;">
+                                    </div>
+                                    <button id="dash-quick-expense-submit-btn" class="btn-primary" style="width: 100%; padding: 10px; font-size: 0.95rem; display: flex; justify-content: center; align-items: center; gap: 8px;">
+                                        <i class="fa-solid fa-plus"></i> تسجيل المصروف
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="card focus-card">
+                                <div class="card-header">
+                                    <h3><i class="fa-solid fa-stopwatch text-accent"></i> وضع التركيز (Focus Mode)</h3>
+                                </div>
+                                <div class="focus-mini-widget">
+                                    <p id="focus-widget-task-name">لا توجد مهمة نشطة حالياً</p>
+                                    <div class="focus-timer-display" id="focus-widget-timer">25:00</div>
+                                    <div class="focus-controls">
+                                        <button id="focus-widget-start" class="btn-icon-round" title="ابدأ"><i class="fa-solid fa-play"></i></button>
+                                        <button id="focus-widget-pause" class="btn-icon-round hidden" title="إيقاف مؤقت"><i class="fa-solid fa-pause"></i></button>
+                                        <button id="focus-widget-reset" class="btn-icon-round" title="إعادة تعيين"><i class="fa-solid fa-rotate-right"></i></button>
+                                    </div>
+                                    <button class="btn-outline" onclick="app.switchTab('tasks')">فتح شاشة التركيز الكاملة</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Column 2: Today's Schedule & Habits -->
+                        <div class="dash-col">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h3><i class="fa-solid fa-list-check text-success"></i> مهام اليوم</h3>
+                                    <button class="btn-text" onclick="app.switchTab('tasks')">عرض الكل</button>
+                                </div>
+                                <div class="dash-tasks-checklist" id="dash-tasks-list">
+                                    <!-- Dynamic -->
+                                    <p class="empty-text">لا توجد مهام مجدولة لليوم.</p>
+                                </div>
+                            </div>
+
+                            <div class="card">
+                                <div class="card-header">
+                                    <h3><i class="fa-solid fa-heart-pulse text-danger"></i> العادات اليومية والالتزام</h3>
+                                    <button class="btn-text" onclick="app.switchTab('health')">إدارة</button>
+                                </div>
+                                <div class="habits-mini-checklist" id="dash-habits-list">
+                                    <!-- Dynamic -->
+                                    <p class="empty-text">لم تقم بإضافة عادات للتتبع بعد.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 2. TASKS & GOALS SECTION -->
+                <section id="tab-tasks" class="tab-section">
+                    <div class="section-header">
+                        <h2>إدارة المهام والأهداف</h2>
+                        <div class="action-buttons">
+                            <button id="new-goal-btn" class="btn-secondary"><i class="fa-solid fa-plus"></i> هدف جديد</button>
+                            <button id="new-task-btn" class="btn-primary"><i class="fa-solid fa-plus"></i> مهمة جديدة</button>
+                        </div>
+                    </div>
+
+                    <div class="tasks-goals-layout">
+                        <!-- Left Panel: Goals Progress -->
+                        <div class="goals-panel">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h3>أهدافك الكبرى (Goals)</h3>
+                                </div>
+                                <div class="goals-list" id="goals-container">
+                                    <!-- Dynamic Goal Cards -->
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Right Panel: Tasks View & Focus Mode -->
+                        <div class="tasks-panel">
+                            <!-- Toggle between Task List and Focus Mode -->
+                            <div class="tasks-view-toggle">
+                                <button class="toggle-btn active" id="toggle-task-list">قائمة المهام</button>
+                                <button class="toggle-btn" id="toggle-focus-mode"><i class="fa-solid fa-stopwatch"></i> شاشة التركيز الكاملة</button>
+                            </div>
+
+                            <!-- View A: Task List -->
+                            <div id="tasks-list-view" class="tasks-list-view">
+                                <div class="tasks-filter-bar">
+                                    <button class="filter-btn active" data-filter="all">الكل</button>
+                                    <button class="filter-btn" data-filter="work">عمل</button>
+                                    <button class="filter-btn" data-filter="study">دراسة</button>
+                                    <button class="filter-btn" data-filter="personal">شخصي</button>
+                                    <button class="filter-btn" data-filter="completed">المنجزة</button>
+                                </div>
+                                <div class="tasks-container" id="tasks-container">
+                                    <!-- Dynamic Tasks -->
+                                </div>
+                            </div>
+
+                            <!-- View B: Focus Mode Screen -->
+                            <div id="focus-mode-view" class="focus-mode-view hidden">
+                                <div class="focus-screen-card">
+                                    <div class="focus-setup" id="focus-setup-area">
+                                        <h3>اختر مهمة للتركيز عليها:</h3>
+                                        <select id="focus-task-select" class="form-control">
+                                            <!-- Dynamic tasks options -->
+                                        </select>
+                                        <div class="timer-setup">
+                                            <label>مدة التركيز (بالدقائق):</label>
+                                            <input type="number" id="focus-duration-input" min="5" max="120" value="25" class="form-control inline-input">
+                                        </div>
+                                        <button id="start-focus-session-btn" class="btn-primary">ابدأ الجلسة الآن</button>
+                                    </div>
+                                    
+                                    <div class="focus-active hidden" id="focus-active-area">
+                                        <h3 id="active-focus-task-title">اسم المهمة هنا</h3>
+                                        <p id="active-focus-goal-title" class="sub-goal-label">الهدف المرتبط: تعلم البرمجة</p>
+                                        <div class="main-timer-circle">
+                                            <svg class="progress-ring" width="220" height="220">
+                                                <circle class="progress-ring__circle-bg" stroke="#f1f5f9" stroke-width="8" fill="transparent" r="100" cx="110" cy="110"/>
+                                                <circle class="progress-ring__circle" id="timer-progress-bar" stroke="#2563eb" stroke-width="8" fill="transparent" r="100" cx="110" cy="110"/>
+                                            </svg>
+                                            <div class="focus-timer-text" id="main-timer-text">25:00</div>
+                                        </div>
+                                        <div class="focus-session-controls">
+                                            <button id="focus-pause-btn" class="btn-secondary"><i class="fa-solid fa-pause"></i> إيقاف مؤقت</button>
+                                            <button id="focus-resume-btn" class="btn-primary hidden"><i class="fa-solid fa-play"></i> استئناف</button>
+                                            <button id="focus-complete-btn" class="btn-success"><i class="fa-solid fa-check"></i> إكمال المهمة</button>
+                                            <button id="focus-cancel-btn" class="btn-danger"><i class="fa-solid fa-xmark"></i> إلغاء الجلسة</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 3. FINANCIAL HUB SECTION -->
+                <section id="tab-finance" class="tab-section">
+                    <div class="section-header">
+                        <h2>Financial Hub | الإدارة المالية المرنة</h2>
+                        <div class="action-buttons">
+                            <button id="new-budget-btn" class="btn-secondary"><i class="fa-solid fa-sliders"></i> ضبط الميزانيات</button>
+                            <button id="new-transaction-btn" class="btn-primary"><i class="fa-solid fa-plus"></i> معاملة جديدة (دخل/مصروف)</button>
+                        </div>
+                    </div>
+
+                    <!-- Financial Summary Cards -->
+                    <div class="finance-summary-grid">
+                        <div class="fin-card">
+                            <span class="fin-card-title">مصروف الشهر الحالي</span>
+                            <span class="fin-card-value" id="fin-month-expense">0 د.ع</span>
+                            <span class="fin-card-sub" id="fin-month-compare">مقارنة بالشهر الماضي: --</span>
+                        </div>
+                        <div class="fin-card">
+                            <span class="fin-card-title">المتبقي للإنفاق الآمن</span>
+                            <span class="fin-card-value text-success" id="fin-month-remaining">0 د.ع</span>
+                            <span class="fin-card-sub" id="fin-month-budget-total">إجمالي ميزانيتك: 0 د.ع</span>
+                        </div>
+                        <div class="fin-card">
+                            <span class="fin-card-title">إجمالي الادخار للشهر</span>
+                            <span class="fin-card-value text-info" id="fin-month-savings">0 د.ع</span>
+                            <span class="fin-card-sub" id="fin-savings-percentage">نسبة الادخار من الدخل: 0%</span>
+                        </div>
+                    </div>
+
+                    <!-- Finance Tabs Navigation -->
+                    <div class="finance-nav-tabs">
+                        <button class="fin-tab-btn active" data-subtab="fin-lifestyle">تكلفة أسلوب حياتك (Lifestyle Cost)</button>
+                        <button class="fin-tab-btn" data-subtab="fin-transactions">سجل المعاملات</button>
+                        <button class="fin-tab-btn" data-subtab="fin-budgets">الميزانيات المحددة</button>
+                        <button class="fin-tab-btn" data-subtab="fin-subscriptions">الاشتراكات الشهرية</button>
+                        <button class="fin-tab-btn" data-subtab="fin-debts">الديون والأقساط</button>
+                    </div>
+
+                    <!-- Sub-tabs Content Container -->
+                    <div class="finance-sub-content">
+                        
+                        <!-- Subtab A: Lifestyle Cost -->
+                        <div id="subtab-fin-lifestyle" class="fin-sub-pane active">
+                            <div class="lifestyle-layout">
+                                <div class="lifestyle-calculators">
+                                    <div class="card">
+                                        <div class="card-header">
+                                            <h3>كم تحتاج شهرياً لتعيش براحة؟</h3>
+                                        </div>
+                                        <div class="card-body">
+                                            <p class="description-text">يتم حساب هذا من متوسط إنفاقك على الأساسيات (أكل، فواتير، مواصلات، اشتراكات ضروروية).</p>
+                                            <div class="calc-row">
+                                                <span class="calc-label">المصروف المريح الحالي:</span>
+                                                <span class="calc-value" id="lifestyle-comfort-cost">0 د.ع / شهرياً</span>
+                                            </div>
+                                            <div class="input-inline-group">
+                                                <label>أو حدد قيمة مخصصة:</label>
+                                                <input type="number" id="custom-comfort-cost-input" placeholder="مثال: 5000" class="form-control inline-input">
+                                                <button id="save-comfort-cost-btn" class="btn-primary">تحديث</button>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="card">
+                                        <div class="card-header">
+                                            <h3>هدف الاستقلال المالي (FIRE Goal)</h3>
+                                        </div>
+                                        <div class="card-body">
+                                            <p class="description-text">للوصول للاستقلال المالي الكامل، تحتاج إلى تجميع مبلغ استثماري يغطي مصروفك المريح السنوي مضروباً في 25 (قاعدة الـ 4%).</p>
+                                            <div class="calc-row">
+                                                <span class="calc-label">المبلغ المستهدف للحرية المالية:</span>
+                                                <span class="calc-value text-accent" id="lifestyle-fire-target">0 د.ع</span>
+                                            </div>
+                                            <div class="calc-progress-container">
+                                                <div class="progress-bar-info">
+                                                    <span>مدخراتك الحالية المخصصة للاستقلال:</span>
+                                                    <span id="fire-current-progress-label">0 د.ع</span>
+                                                </div>
+                                                <div class="progress-bar-track">
+                                                    <div class="progress-bar-fill" id="fire-progress-bar" style="width: 0%"></div>
+                                                </div>
+                                                <div class="input-inline-group" style="margin-top: 15px;">
+                                                    <label>أضف مبلغ ادخار استثماري:</label>
+                                                    <input type="number" id="fire-saving-add-input" placeholder="مثال: 500" class="form-control inline-input">
+                                                    <button id="add-fire-saving-btn" class="btn-success">ادخار</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="lifestyle-visualizations">
+                                    <div class="card">
+                                        <div class="card-header">
+                                            <h3>أين يذهب وقتك ومالك؟ (مقارنة بصرية)</h3>
+                                        </div>
+                                        <div class="card-body">
+                                            <p class="description-text">يقارن هذا الرسم البياني بين النسبة المئوية للمصروفات المالية في كل فئة، ونسبة المهام المنجزة (توزيع الوقت والتركيز) في الفئات المقابلة.</p>
+                                            <div class="chart-container">
+                                                <canvas id="timeMoneyComparisonChart"></canvas>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Subtab B: Transactions list -->
+                        <div id="subtab-fin-transactions" class="fin-sub-pane">
+                            <div class="card">
+                                <div class="transactions-header">
+                                    <h3>سجل المعاملات</h3>
+                                    <div class="filters">
+                                        <select id="transaction-type-filter" class="form-control inline-input">
+                                            <option value="all">كل العمليات</option>
+                                            <option value="expense">المصروفات فقط</option>
+                                            <option value="income">الدخل فقط</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="table-responsive">
+                                    <table class="finance-table">
+                                        <thead>
+                                            <tr>
+                                                <th>التاريخ</th>
+                                                <th>البيان / الوصف</th>
+                                                <th>التصنيف</th>
+                                                <th>المزاج المصاحب</th>
+                                                <th>النوع</th>
+                                                <th>المبلغ</th>
+                                                <th>إجراء</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="transactions-table-body">
+                                            <!-- Dynamic rows -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Subtab C: Budgets limit -->
+                        <div id="subtab-fin-budgets" class="fin-sub-pane">
+                            <div class="budgets-layout">
+                                <div class="card budgets-list-card">
+                                    <div class="card-header">
+                                        <h3>ميزانيات التصنيفات الشهرية</h3>
+                                    </div>
+                                    <div class="budgets-container" id="budgets-container">
+                                        <!-- Dynamic Budgets list -->
+                                    </div>
+                                </div>
+                                <div class="card budgets-tips-card">
+                                    <div class="card-header">
+                                        <h3>حالة ميزانيتك الكلية</h3>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="budget-overall-progress">
+                                            <div class="overall-progress-circle">
+                                                <span id="overall-budget-percentage">0%</span>
+                                                <span class="sub-label">من الميزانية الكلية</span>
+                                            </div>
+                                        </div>
+                                        <div class="budget-notices" id="budget-notices-container">
+                                            <p class="text-success"><i class="fa-solid fa-circle-check"></i> إنفاقك ممتاز وضمن الحدود الآمنة!</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Subtab D: Subscriptions -->
+                        <div id="subtab-fin-subscriptions" class="fin-sub-pane">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h3>الاشتراكات الشهرية المتكررة</h3>
+                                    <button id="add-subscription-btn" class="btn-primary"><i class="fa-solid fa-plus"></i> إضافة اشتراك</button>
+                                </div>
+                                <div class="table-responsive">
+                                    <table class="finance-table">
+                                        <thead>
+                                            <tr>
+                                                <th>الخدمة / التطبيق</th>
+                                                <th>التكلفة الشهرية</th>
+                                                <th>تاريخ التجديد القادم</th>
+                                                <th>أيام متبقية للتجديد</th>
+                                                <th>تنبيه قبل التجديد</th>
+                                                <th>إجراء</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="subscriptions-table-body">
+                                            <!-- Dynamic rows -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="subscriptions-summary-footer">
+                                    <span>مجموع الاشتراكات الشهرية الكلي: <strong id="subs-total-val" class="text-danger">0 د.ع</strong></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Subtab E: Debts / Installments -->
+                        <div id="subtab-fin-debts" class="fin-sub-pane">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h3>إدارة الديون والأقساط المستحقة</h3>
+                                    <button id="add-debt-btn" class="btn-primary"><i class="fa-solid fa-plus"></i> إضافة دين/قسط</button>
+                                </div>
+                                <div class="table-responsive">
+                                    <table class="finance-table">
+                                        <thead>
+                                            <tr>
+                                                <th>الدين / القسط</th>
+                                                <th>المبلغ الإجمالي</th>
+                                                <th>ما تم دفعه</th>
+                                                <th>المتبقي للسداد</th>
+                                                <th>تاريخ القسط القادم</th>
+                                                <th>نسبة السداد</th>
+                                                <th>إجراء</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="debts-table-body">
+                                            <!-- Dynamic rows -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 4. HEALTH HUB SECTION -->
+                <section id="tab-health" class="tab-section">
+                    <div class="section-header">
+                        <h2>Health & Well-being | الصحة والعافية</h2>
+                    </div>
+
+                    <div class="health-layout">
+                        <!-- Left Panel: Daily Logs & Water -->
+                        <div class="health-input-panel">
+                            <!-- Water Tracker Card -->
+                            <div class="card water-tracker-card">
+                                <div class="card-header">
+                                    <h3><i class="fa-solid fa-glass-water text-info"></i> تتبع الترطيب وشرب الماء</h3>
+                                </div>
+                                <div class="water-widget-body">
+                                    <div class="water-glass-display">
+                                        <div class="water-level" id="water-bar" style="height: 0%"></div>
+                                        <div class="water-text">
+                                            <span id="water-current-count">0</span> / <span id="water-goal-count">8</span> كوب
+                                        </div>
+                                    </div>
+                                    <div class="water-controls">
+                                        <button id="add-water-cup-btn" class="btn-primary"><i class="fa-solid fa-plus"></i> أضف كوب ماء</button>
+                                        <button id="reset-water-btn" class="btn-outline">إعادة تعيين اليوم</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Workout Log Card -->
+                            <div class="card">
+                                <div class="card-header">
+                                    <h3><i class="fa-solid fa-dumbbell text-accent"></i> تتبع النشاط البدني والرياضة</h3>
+                                </div>
+                                <div class="card-body">
+                                    <div class="form-group">
+                                        <label>نوع التمرين والنشاط:</label>
+                                        <input type="text" id="workout-type-input" placeholder="مثال: مشي سريع، تمرين مقاومة..." class="form-control">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>المدة (بالدقائق):</label>
+                                        <input type="number" id="workout-duration-input" placeholder="مثال: 45" class="form-control">
+                                    </div>
+                                    <button id="save-workout-btn" class="btn-primary w-100">تسجيل التمرين</button>
+                                    
+                                    <div class="workout-history" style="margin-top: 20px;">
+                                        <h4>تمرينات اليوم:</h4>
+                                        <ul id="today-workouts-list" class="simple-list">
+                                            <!-- Dynamic items -->
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Right Panel: Habits tracker with Streaks -->
+                        <div class="health-habits-panel">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h3>تتبع عاداتك اليومية</h3>
+                                    <button id="add-habit-btn" class="btn-secondary"><i class="fa-solid fa-plus"></i> إضافة عادة</button>
+                                </div>
+                                <div class="habits-list-container" id="habits-list-container">
+                                    <!-- Dynamic Habit Cards -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 5. CALENDAR & JOURNAL SECTION -->
+                <section id="tab-calendar" class="tab-section">
+                    <div class="section-header">
+                        <h2>التقويم الذكي واليوميات الشخصية</h2>
+                        <div class="action-buttons">
+                            <button id="new-event-btn" class="btn-secondary"><i class="fa-solid fa-plus"></i> موعد/حدث جديد</button>
+                            <button id="new-journal-btn" class="btn-primary"><i class="fa-solid fa-pen-fancy"></i> كتابة يوميات جديدة</button>
+                        </div>
+                    </div>
+
+                    <div class="calendar-journal-layout">
+                        <!-- Calendar Widget -->
+                        <div class="calendar-panel">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h3>تخطيط الأسبوع والتقويم</h3>
+                                </div>
+                                <div class="week-calendar-container">
+                                    <div class="week-header-nav">
+                                        <span id="current-week-label">أسبوع مايو 29</span>
+                                    </div>
+                                    <div class="week-days-grid" id="week-days-grid">
+                                        <!-- Dynamic days -->
+                                    </div>
+                                </div>
+                                <div class="day-events-list" style="margin-top: 20px;">
+                                    <h4 id="selected-day-events-title">مواعيد ومهام اليوم المختار</h4>
+                                    <div id="day-events-container" class="events-container">
+                                        <!-- Dynamic -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Journal / Diary Widget -->
+                        <div class="journal-panel">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h3>مفكرة اليوميات (Journal)</h3>
+                                </div>
+                                <div class="journal-composer">
+                                    <div class="form-group">
+                                        <label>كيف كان يومك؟ وماذا تعلمت؟</label>
+                                        <textarea id="journal-text-area" rows="6" placeholder="اكتب أفكارك والدروس المستفادة هنا..." class="form-control"></textarea>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>تقييم اليوم الإجمالي:</label>
+                                        <div class="rating-stars" id="day-rating-stars">
+                                            <span class="star-rating" data-val="1">★</span>
+                                            <span class="star-rating" data-val="2">★</span>
+                                            <span class="star-rating" data-val="3">★</span>
+                                            <span class="star-rating" data-val="4">★</span>
+                                            <span class="star-rating" data-val="5">★</span>
+                                        </div>
+                                    </div>
+                                    <button id="save-journal-btn" class="btn-primary">حفظ اليوميات</button>
+                                </div>
+                                
+                                <div class="journal-history" style="margin-top: 25px;">
+                                    <h4>سجل اليوميات السابقة:</h4>
+                                    <div id="journal-history-list" class="journal-history-list">
+                                        <!-- Dynamic entries list -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 6. STATS & ANALYTICS SECTION -->
+                <section id="tab-stats" class="tab-section">
+                    <div class="section-header">
+                        <h2>التقارير والإحصائيات التحليلية لحياتك</h2>
+                        <div class="action-buttons">
+                            <button id="export-pdf-report-btn" class="btn-secondary"><i class="fa-solid fa-file-pdf"></i> تصدير التقرير الشهري (PDF)</button>
+                            <button id="trigger-weekly-review-btn" class="btn-primary"><i class="fa-solid fa-calendar-check"></i> بدء مراجعتك الأسبوعية</button>
+                        </div>
+                    </div>
+
+                    <div class="stats-charts-grid">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3>توزيع المصروفات المالية</h3>
+                            </div>
+                            <div class="chart-container">
+                                <canvas id="expensesDistributionChart"></canvas>
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <div class="card-header">
+                                <h3>الإنتاجية وإتمام المهام الأسبوعية</h3>
+                            </div>
+                            <div class="chart-container">
+                                <canvas id="tasksCompletionWeeklyChart"></canvas>
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <div class="card-header">
+                                <h3>أيامك الأكثر فاعلية ونشاطاً</h3>
+                            </div>
+                            <div class="chart-container">
+                                <canvas id="activeDaysHeatChart"></canvas>
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <div class="card-header">
+                                <h3>العلاقة بين النوم والإنتاجية والمصروفات</h3>
+                            </div>
+                            <div class="chart-container">
+                                <canvas id="sleepVsProductivityChart"></canvas>
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <div class="card-header">
+                                <h3><i class="fa-solid fa-glass-water text-info"></i> معدلات شرب الماء الأسبوعية</h3>
+                            </div>
+                            <div class="chart-container">
+                                <canvas id="waterIntakeWeeklyChart"></canvas>
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <div class="card-header">
+                                <h3><i class="fa-solid fa-fire text-danger"></i> نسبة التزام العادات الأسبوعية</h3>
+                            </div>
+                            <div class="chart-container">
+                                <canvas id="habitsCompletionWeeklyChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Weekly Reviews History -->
+                    <div class="card" style="margin-top: 25px;">
+                        <div class="card-header">
+                            <h3>أرشيف المراجعات الأسبوعية السابقة</h3>
+                        </div>
+                        <div id="weekly-reviews-container" class="reviews-history-container">
+                            <!-- Dynamic -->
+                            <p class="empty-text">لم تسجل مراجعات أسبوعية بعد.</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 7. AI ASSISTANT SECTION -->
+                <section id="tab-ai-assistant" class="tab-section">
+                    <div class="section-header">
+                        <h2>المساعد الذكي الشخصي | AI Assistant</h2>
+                        <span class="ai-badge">فعال محلياً</span>
+                    </div>
+
+                    <div class="ai-chat-layout">
+                        <div class="ai-prompts-bar">
+                            <h3>أسئلة سريعة للمساعد الذكي:</h3>
+                            <div class="quick-prompts-list">
+                                <button class="quick-prompt-btn" data-prompt="خطط يومي">
+                                    <i class="fa-solid fa-calendar-day"></i> خطط يومي
+                                </button>
+                                <button class="quick-prompt-btn" data-prompt="ما أولوياتي الآن؟">
+                                    <i class="fa-solid fa-circle-exclamation"></i> ما أولوياتي الآن؟
+                                </button>
+                                <button class="quick-prompt-btn" data-prompt="حلل أسبوعي">
+                                    <i class="fa-solid fa-chart-line"></i> حلل أسبوعي
+                                </button>
+                                <button class="quick-prompt-btn" data-prompt="لخص ما أنجزته">
+                                    <i class="fa-solid fa-square-poll-vertical"></i> لخص ما أنجزته
+                                </button>
+                                <button class="quick-prompt-btn" data-prompt="تحليل الإنفاق وتوقعات الادخار">
+                                    <i class="fa-solid fa-coins"></i> تحليل إنفاقي
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="ai-chat-container card">
+                            <div class="chat-messages" id="chat-messages-box">
+                                <div class="message ai-message">
+                                    <div class="message-avatar"><i class="fa-solid fa-robot"></i></div>
+                                    <div class="message-text">
+                                        <p>مرحباً بك! أنا مساعدك الذكي الخاص بتطبيق **يُسر**. سأقوم بتحليل نومك وعاداتك وإنتاجيتك ومصاريفك المالية وتقديم نصائح ترشدك للاستقلال المالي والإنتاجية المثالية.</p>
+                                        <p>يمكنك سؤالي عما ترغب به، أو استخدام الأزرار السريعة لتخطيط يومك أو تحليل أسبوعك بناءً على البيانات التي تسجلها.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="chat-input-bar">
+                                <input type="text" id="chat-user-input" placeholder="اسأل المساعد الذكي عن أي شيء في حياتك..." class="form-control">
+                                <button id="chat-send-btn" class="btn-primary"><i class="fa-solid fa-paper-plane-rtl"></i> إرسال</button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                
+                <!-- 8. SETTINGS SECTION -->
+                <section id="tab-settings" class="tab-section">
+                    <div class="section-header">
+                        <h2>إعدادات التطبيق والأمان</h2>
+                    </div>
+
+                    <div class="dashboard-grid">
+                        <!-- Left Col: Security & PIN Lock -->
+                        <div class="dash-col">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h3><i class="fa-solid fa-shield-halved text-accent"></i> قفل خصوصية التطبيق</h3>
+                                </div>
+                                <div class="card-body">
+                                    <p class="description-text" style="margin-bottom: 15px;">احمِ بياناتك المالية واليوميات بوضع رقم سري (PIN) مكون من 4 أرقام يطلب عند فتح التطبيق.</p>
+                                    
+                                    <div class="form-group">
+                                        <label class="checkbox-label">
+                                            <input type="checkbox" id="settings-pin-enable"> تفعيل قفل الخصوصية (PIN Lock)
+                                        </label>
+                                    </div>
+                                    
+                                    <div class="form-group" id="settings-pin-input-group" style="display: none;">
+                                        <label>ادخل رمز PIN المكون من 4 أرقام:</label>
+                                        <input type="password" id="settings-pin-value" maxlength="4" placeholder="مثال: 1234" class="form-control inline-input" style="letter-spacing: 5px; text-align: center; width: 140px;">
+                                    </div>
+                                    
+                                    <button id="save-pin-settings-btn" class="btn-primary">حفظ إعدادات الأمان</button>
+                                </div>
+                            </div>
+
+                            <div class="card">
+                                <div class="card-header">
+                                    <h3><i class="fa-solid fa-floppy-disk text-primary"></i> النسخ الاحتياطي واستعادة البيانات</h3>
+                                </div>
+                                <div class="card-body" style="display: flex; flex-direction: column; gap: 15px;">
+                                    <p class="description-text">نظراً لأن التطبيق محلي بالكامل، يوصى بأخذ نسخة احتياطية من بياناتك لتجنب فقدانها عند مسح سجل المتصفح.</p>
+                                    
+                                    <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+                                        <button id="export-backup-btn" class="btn-outline"><i class="fa-solid fa-download"></i> تصدير نسخة احتياطية (JSON)</button>
+                                    </div>
+                                    
+                                    <div style="border-top: 1px solid var(--border-light); padding-top: 15px;">
+                                        <label style="display: block; font-size: 0.85rem; font-weight: 500; color: var(--text-secondary); margin-bottom: 8px;">استعادة البيانات من ملف احتياطي:</label>
+                                        <div class="input-inline-group">
+                                            <input type="file" id="import-backup-file" accept=".json" class="form-control" style="font-size: 0.8rem; padding: 6px 10px;">
+                                            <button id="import-backup-btn" class="btn-secondary">استيراد</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Right Col: General Configuration & Financial Export -->
+                        <div class="dash-col">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h3><i class="fa-solid fa-sliders text-success"></i> إعدادات عامة</h3>
+                                </div>
+                                <div class="card-body">
+                                    <div class="form-group">
+                                        <label>اسم المستخدم (يظهر في الترحيب):</label>
+                                        <input type="text" id="settings-username-input" class="form-control" placeholder="ادخل اسمك هنا...">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>العملة المفضلة:</label>
+                                        <select id="settings-currency-select" class="form-control" style="width: 180px; display: inline-block; margin-right: 8px;">
+                                            <option value="د.ع">دينار عراقي (د.ع)</option>
+                                            <option value="ر.س">ريال سعودي (ر.س)</option>
+                                            <option value="$">دولار أمريكي ($)</option>
+                                            <option value="د.إ">درهم إماراتي (د.إ)</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>الهدف اليومي لشرب الماء (بالأكواب):</label>
+                                        <input type="number" id="settings-water-goal-input" min="4" max="25" class="form-control inline-input" style="width: 100px;">
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="checkbox-label">
+                                            <input type="checkbox" id="settings-sound-enable" checked> تفعيل المؤثرات والأصوات التنبيهية
+                                        </label>
+                                    </div>
+                                    <button id="save-general-settings-btn" class="btn-primary">حفظ التغييرات</button>
+                                </div>
+                            </div>
+
+                            <div class="card">
+                                <div class="card-header">
+                                    <h3><i class="fa-solid fa-file-csv text-info"></i> التقارير وتصدير البيانات</h3>
+                                </div>
+                                <div class="card-body">
+                                    <p class="description-text" style="margin-bottom: 15px;">يمكنك تحميل سجل المعاملات المالية بالكامل كملف Excel/CSV لمراجعته خارج التطبيق.</p>
+                                    <button id="export-transactions-csv-btn" class="btn-outline"><i class="fa-solid fa-file-excel"></i> تصدير المعاملات كـ CSV</button>
+                                </div>
+                            </div>
+
+                            <div class="card" style="border: 1px solid var(--danger-color); background-color: var(--danger-light);">
+                                <div class="card-header" style="border-bottom-color: rgba(239, 68, 68, 0.2)">
+                                    <h3 class="text-danger"><i class="fa-solid fa-triangle-exclamation"></i> منطقة الخطر (إعادة ضبط)</h3>
+                                </div>
+                                <div class="card-body">
+                                    <p class="description-text" style="margin-bottom: 15px;">سيقوم هذا الخيار بمسح كافة البيانات المخزنة بشكل نهائي ولا يمكن استعادتها إلا بملف خارجي.</p>
+                                    <button id="reset-all-data-btn" class="btn-danger"><i class="fa-solid fa-trash-arrow-up"></i> حذف كافة البيانات والبدء من جديد</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- GLOBAL DYNAMIC MODALS -->
+
+    <!-- Modal 1: New Task -->
+    <div id="task-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="task-modal-title">مهمة جديدة</h3>
+                <span class="close-modal-btn">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>عنوان المهمة:</label>
+                    <input type="text" id="task-title-input" class="form-control" placeholder="مثال: مراجعة الميزانية السنوية...">
+                </div>
+                <div class="form-group">
+                    <label>التصنيف:</label>
+                    <select id="task-category-select" class="form-control">
+                        <option value="work">عمل</option>
+                        <option value="study">دراسة</option>
+                        <option value="personal">شخصي</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>الأولوية:</label>
+                    <select id="task-priority-select" class="form-control">
+                        <option value="high">مرتفعة (هام وعاجل)</option>
+                        <option value="medium" selected>متوسطة (هام وغير عاجل)</option>
+                        <option value="low">منخفضة</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>الربط بهدف كبار:</label>
+                    <select id="task-goal-select" class="form-control">
+                        <option value="">غير مرتبط بهدف</option>
+                        <!-- Dynamic Goals list -->
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>خطوات فرعية للمهمة:</label>
+                    <div class="sub-tasks-composer">
+                        <div class="input-inline-group">
+                            <input type="text" id="subtask-input" placeholder="أضف خطوة فرعية..." class="form-control inline-input">
+                            <button id="add-subtask-composer-btn" class="btn-secondary">أضف</button>
+                        </div>
+                        <ul id="subtasks-composer-list" class="subtasks-composer-list"></ul>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>تاريخ الاستحقاق:</label>
+                    <input type="date" id="task-due-date-input" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label>وقت التنبيه (اختياري):</label>
+                    <input type="time" id="task-alert-time-input" class="form-control">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-outline close-modal-btn">إلغاء</button>
+                <button id="save-task-submit-btn" class="btn-primary">حفظ المهمة</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal 2: New Goal -->
+    <div id="goal-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>هدف كبار جديد</h3>
+                <span class="close-modal-btn">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>عنوان الهدف الرئيسي:</label>
+                    <input type="text" id="goal-title-input" class="form-control" placeholder="مثال: تعلم لغة برمجة جديدة، تحسين اللياقة...">
+                </div>
+                <div class="form-group">
+                    <label>التصنيف:</label>
+                    <select id="goal-category-select" class="form-control">
+                        <option value="career">مهني / عمل</option>
+                        <option value="health">صحي / بدني</option>
+                        <option value="financial">مالي / ادخاري</option>
+                        <option value="personal">شخصي / تطويري</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>الوصف المكمل للهدف:</label>
+                    <textarea id="goal-desc-input" rows="3" class="form-control" placeholder="اكتب تفاصيل أكثر حول كيفية تحقيق الهدف..."></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-outline close-modal-btn">إلغاء</button>
+                <button id="save-goal-submit-btn" class="btn-primary">حفظ الهدف</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal 3: New Transaction -->
+    <div id="transaction-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>إضافة عملية مالية</h3>
+                <span class="close-modal-btn">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>نوع العملية:</label>
+                    <div class="radio-toggle-group">
+                        <label class="radio-label">
+                            <input type="radio" name="trans-type" value="expense" checked> مصروف
+                        </label>
+                        <label class="radio-label">
+                            <input type="radio" name="trans-type" value="income"> دخل
+                        </label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>المبلغ (<span class="currency-label">د.ع</span>):</label>
+                    <input type="number" id="trans-amount-input" class="form-control" placeholder="مثال: 5000">
+                </div>
+                <div class="form-group">
+                    <label>الوصف / البيان:</label>
+                    <input type="text" id="trans-desc-input" class="form-control" placeholder="مثال: وجبة عداء، فاتورة كهرباء...">
+                </div>
+                <div class="form-group" id="trans-category-group">
+                    <label>التصنيف المالي:</label>
+                    <select id="trans-category-select" class="form-control">
+                        <!-- Will switch based on type -->
+                        <option value="أكل">أكل</option>
+                        <option value="مواصلات">مواصلات</option>
+                        <option value="اشتراكات">اشتراكات</option>
+                        <option value="تسوق">تسوق</option>
+                        <option value="فواتير">فواتير</option>
+                        <option value="قهوة">قهوة</option>
+                        <option value="ترفيه">ترفيه</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>المزاج المرافق للعملية (اختياري):</label>
+                    <select id="trans-mood-select" class="form-control">
+                        <option value="">لا يوجد مزاج محدد</option>
+                        <option value="سعيد">😊 سعيد</option>
+                        <option value="متوتر">😰 متوتر</option>
+                        <option value="متعب">😴 متعب</option>
+                        <option value="هادئ">😌 هادئ</option>
+                        <option value="حزين">😢 حزين</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>ربط العملية بهدف مالي (اختياري):</label>
+                    <select id="trans-goal-select" class="form-control">
+                        <option value="">لا يوجد ربط</option>
+                        <!-- Dynamic list of savings goal -->
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>التاريخ:</label>
+                    <input type="date" id="trans-date-input" class="form-control">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-outline close-modal-btn">إلغاء</button>
+                <button id="save-transaction-submit-btn" class="btn-primary">حفظ العملية</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal 4: Set Budgets -->
+    <div id="budgets-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>تحديد حدود الميزانيات الشهرية</h3>
+                <span class="close-modal-btn">&times;</span>
+            </div>
+            <div class="modal-body" id="budgets-setup-body">
+                <!-- Dynamically render inputs for each expense category -->
+            </div>
+            <div class="modal-footer">
+                <button class="btn-outline close-modal-btn">إلغاء</button>
+                <button id="save-budgets-submit-btn" class="btn-primary">حفظ الميزانية</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal 5: New Subscription -->
+    <div id="subscription-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>إضافة اشتراك شهري جديد</h3>
+                <span class="close-modal-btn">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>اسم الخدمة / التطبيق:</label>
+                    <input type="text" id="sub-name-input" class="form-control" placeholder="مثال: Netflix, Spotify...">
+                </div>
+                <div class="form-group">
+                    <label>القيمة الشهرية (<span class="currency-label">د.ع</span>):</label>
+                    <input type="number" id="sub-cost-input" class="form-control" placeholder="مثال: 5000">
+                </div>
+                <div class="form-group">
+                    <label>تاريخ التجديد القادم:</label>
+                    <input type="date" id="sub-date-input" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="sub-alert-toggle" checked> تفعيل تنبيه تجديد الاشتراك مسبقاً
+                    </label>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-outline close-modal-btn">إلغاء</button>
+                <button id="save-subscription-submit-btn" class="btn-primary">حفظ الاشتراك</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal 6: New Debt/Installment -->
+    <div id="debt-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>إضافة قسط / دين مستحق</h3>
+                <span class="close-modal-btn">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>اسم الدين / القسط:</label>
+                    <input type="text" id="debt-name-input" class="form-control" placeholder="مثال: قسط السيارة، سلفة صديق...">
+                </div>
+                <div class="form-group">
+                    <label>المبلغ الإجمالي:</label>
+                    <input type="number" id="debt-total-input" class="form-control" placeholder="مثال: 20000">
+                </div>
+                <div class="form-group">
+                    <label>المبلغ المدفوع حتى الآن:</label>
+                    <input type="number" id="debt-paid-input" class="form-control" placeholder="مثال: 4000" value="0">
+                </div>
+                <div class="form-group">
+                    <label>تاريخ الدفعة القادمة:</label>
+                    <input type="date" id="debt-date-input" class="form-control">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-outline close-modal-btn">إلغاء</button>
+                <button id="save-debt-submit-btn" class="btn-primary">حفظ الدين</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal 7: Weekly Review Wizard -->
+    <div id="weekly-review-modal" class="modal">
+        <div class="modal-content large-modal">
+            <div class="modal-header">
+                <h3>معالج المراجعة الأسبوعية الذاتي</h3>
+                <span class="close-modal-btn">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="wizard-steps-indicator">
+                    <span class="wizard-dot active" id="dot-w-1">الإنجازات</span>
+                    <span class="wizard-dot" id="dot-w-2">الإخفاقات والأسباب</span>
+                    <span class="wizard-dot" id="dot-w-3">التعديلات والأهداف</span>
+                </div>
+                
+                <div class="wizard-content-pane" id="wizard-pane-1">
+                    <h4>أولاً: ماذا أنجزت هذا الأسبوع؟</h4>
+                    <p class="description-text">هذه قائمة بالمهام والعادات التي أكملتها بنجاح خلال آخر 7 أيام:</p>
+                    <div class="review-stats-mini" id="weekly-review-achievements-stats">
+                        <!-- Compiled automatically -->
+                    </div>
+                    <div class="form-group">
+                        <label>ملاحظات إضافية حول نجاحاتك وتفوقك هذا الأسبوع:</label>
+                        <textarea id="review-notes-achieved" rows="4" class="form-control" placeholder="اكتب مشاعرك وفخرك بما حققت..."></textarea>
+                    </div>
+                </div>
+
+                <div class="wizard-content-pane hidden" id="wizard-pane-2">
+                    <h4>ثانياً: ما الذي أخفقت فيه وما هي الأسباب؟</h4>
+                    <p class="description-text">هنا نراجع ما واجهته من عقبات وما قصرت فيه:</p>
+                    <div class="form-group">
+                        <label>ما الذي تعتقد أنه فشل أو لم يسير بالشكل المطلوب؟</label>
+                        <textarea id="review-notes-failed" rows="3" class="form-control" placeholder="مثال: لم ألتزم بالجيم 3 مرات، تسرعت بالصرف..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>لماذا حدث هذا الإخفاق؟ (تحليل الأسباب):</label>
+                        <textarea id="review-notes-reasons" rows="3" class="form-control" placeholder="مثال: السهر ليلاً سبب لي كسل الصباح، أو التوتر قادني للإنفاق الترفيهي..."></textarea>
+                    </div>
+                </div>
+
+                <div class="wizard-content-pane hidden" id="wizard-pane-3">
+                    <h4>ثالثاً: ماذا ستعدل للأسبوع القادم؟ وما هي الأهداف؟</h4>
+                    <p class="description-text">هنا نضع خطة تصحيحية للمضي قدماً بثبات ويُسر:</p>
+                    <div class="form-group">
+                        <label>ما هي التعديلات التي ستقوم بها لحل مشكلات الأسبوع الماضي؟</label>
+                        <textarea id="review-notes-actions" rows="4" class="form-control" placeholder="مثال: وضع الهاتف خارج الغرفة قبل النوم، ميزانية صارمة للقهوة الخارجية..."></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="wizard-prev-btn" class="btn-outline hidden">السابق</button>
+                <button id="wizard-next-btn" class="btn-primary">التالي</button>
+                <button id="wizard-finish-btn" class="btn-success hidden">حفظ وإنهاء المراجعة</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal 8: Calendar Event -->
+    <div id="event-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>إضافة حدث / موعد للتقويم</h3>
+                <span class="close-modal-btn">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>عنوان الموعد / الحدث:</label>
+                    <input type="text" id="event-title-input" class="form-control" placeholder="مثال: طبيب الأسنان، موعد عمل، راحة وقهوة...">
+                </div>
+                <div class="form-group">
+                    <label>نوع الموعد:</label>
+                    <select id="event-type-select" class="form-control">
+                        <option value="appointment">موعد / اجتماع</option>
+                        <option value="rest">وقت راحة (Rest Time)</option>
+                        <option value="study">تخطيط مذاكرة / دراسة</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>تاريخ الحدث:</label>
+                    <input type="date" id="event-date-input" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label>الوقت:</label>
+                    <input type="time" id="event-time-input" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="event-alert-toggle" checked> تفعيل تنبيه مسبق قبل البدء بـ 15 دقيقة
+                    </label>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-outline close-modal-btn">إلغاء</button>
+                <button id="save-event-submit-btn" class="btn-primary">حفظ الموعد</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Fullscreen PIN LOCK SCREEN -->
+    <div id="pin-lock-screen" class="modal active" style="z-index: 9999; background-color: var(--bg-color); display: none; justify-content: center; align-items: center; opacity: 1; pointer-events: auto;">
+        <div class="focus-screen-card" style="width: 340px; border-radius: 20px; box-shadow: var(--shadow-lg); padding: 30px; background-color: var(--card-bg); border: 1px solid var(--border-color);">
+            <div class="logo-icon" style="width: 50px; height: 50px; background-color: var(--accent-color); color: white; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.6rem; margin: 0 auto 15px; box-shadow: 0 4px 12px rgba(124,58,237,0.3);">
+                <i class="fa-solid fa-lock"></i>
+            </div>
+            <h3 style="margin-bottom: 8px;">تطبيق يُسر محمي</h3>
+            <p class="description-text" style="margin-bottom: 20px;">ادخل رمز PIN المكون من 4 أرقام لإلغاء القفل:</p>
+            
+            <div style="display: flex; justify-content: center; gap: 10px; margin-bottom: 25px;">
+                <input type="password" id="pin-screen-val" maxlength="4" readonly style="width: 160px; height: 45px; text-align: center; font-size: 1.8rem; letter-spacing: 8px; border-radius: 10px; border: 1.5px solid var(--border-color); background-color: var(--bg-color); color: var(--text-primary); outline: none;">
+            </div>
+
+            <!-- Dial Keypad -->
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; max-width: 240px; margin: 0 auto 15px;">
+                <button class="btn-outline pin-key-btn" data-key="1" style="height: 50px; border-radius: 50%; font-size: 1.2rem;">1</button>
+                <button class="btn-outline pin-key-btn" data-key="2" style="height: 50px; border-radius: 50%; font-size: 1.2rem;">2</button>
+                <button class="btn-outline pin-key-btn" data-key="3" style="height: 50px; border-radius: 50%; font-size: 1.2rem;">3</button>
+                <button class="btn-outline pin-key-btn" data-key="4" style="height: 50px; border-radius: 50%; font-size: 1.2rem;">4</button>
+                <button class="btn-outline pin-key-btn" data-key="5" style="height: 50px; border-radius: 50%; font-size: 1.2rem;">5</button>
+                <button class="btn-outline pin-key-btn" data-key="6" style="height: 50px; border-radius: 50%; font-size: 1.2rem;">6</button>
+                <button class="btn-outline pin-key-btn" data-key="7" style="height: 50px; border-radius: 50%; font-size: 1.2rem;">7</button>
+                <button class="btn-outline pin-key-btn" data-key="8" style="height: 50px; border-radius: 50%; font-size: 1.2rem;">8</button>
+                <button class="btn-outline pin-key-btn" data-key="9" style="height: 50px; border-radius: 50%; font-size: 1.2rem;">9</button>
+                <button class="btn-text text-danger pin-key-btn" data-key="clear" style="height: 50px; font-size: 0.95rem;">مسح</button>
+                <button class="btn-outline pin-key-btn" data-key="0" style="height: 50px; border-radius: 50%; font-size: 1.2rem;">0</button>
+                <button class="btn-text text-primary pin-key-btn" data-key="delete" style="height: 50px; font-size: 1.2rem;"><i class="fa-solid fa-delete-left"></i></button>
+            </div>
+            <p id="pin-screen-error-msg" class="text-danger hidden" style="font-size: 0.8rem; margin-top: 5px;">رمز PIN خاطئ! حاول مجدداً.</p>
+        </div>
+    </div>
+
+    <!-- Dynamic JS Loading -->
+    <script src="js/app.js"></script>
+    <script src="js/tasks.js"></script>
+    <script src="js/finance.js"></script>
+    <script src="js/health.js"></script>
+    <script src="js/notifications.js"></script>
+    <script src="js/ai.js"></script>
+    <script src="js/charts.js"></script>
+    <script src="js/calendar.js"></script>
+</body>
+</html>
